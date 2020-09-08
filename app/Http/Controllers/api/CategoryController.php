@@ -119,9 +119,12 @@ class CategoryController extends Controller
      */
     public function getPostsonPage($id, $page)
     {
-        $post = \App\Category::findOrFail($id)->post->skip(($page - 1) * 5)->take(5);
-
-        return $post;
+        $post = \App\Category::findOrFail($id)->post->skip(($page - 1) * 5)->take(5)->toArray();
+        $data = [];
+        foreach ($post as $value) {
+            array_push($data, $value);
+        }
+        return $data;
     }
     /**
      * @OA\Get(
@@ -169,7 +172,7 @@ class CategoryController extends Controller
     public function index()
     {
         //
-        $cate = \App\Category::orderBy('created_at', 'desc')->get()->take(6);
+        $cate = \App\Category::orderBy('created_at', 'desc')->get()->take(5);
         return $cate;
     }
 
@@ -192,31 +195,34 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //
-        $validation = Validator::make($request->all(), [
-            'CateName' => 'required|string|unique:category,CateName',
-        ]);
+        // $validation = Validator::make($request->all(), [
+        //     'CateName' => 'required|string|unique:category,CateName',
+        // ]);
 
-        if ($validation->fails()) {
-            return response()->json(
-                ['error' => $validation->errors()],
-                401
-            );
-        }
-        $newCate = new \App\Category;
+        // if ($validation->fails()) {
+        //     return response()->json(
+        //         ['error' => $validation->errors()],
+        //         401
+        //     );
+        // }
+        // $newCate = new \App\Category;
 
-        $newCate->CateName = $request->CateName;
-        $newCate->Alias = convert_vi_to_en($newCate->CateName);
+        // $newCate->CateName = $request->CateName;
+        // $newCate->Alias = convert_vi_to_en($newCate->CateName);
 
-        if (!$newCate->save())
-            return array(
-                'code'      =>  400,
-                'message'   =>  'Error!'
-            );
+        // if (!$newCate->save())
+        //     return array(
+        //         'code'      =>  400,
+        //         'message'   =>  'Error!'
+        //     );
 
-        return array(
-            'code' => 200,
-            'message' => 'Insert Success'
-        );
+        // return array(
+        //     'code' => 200,
+        //     'message' => 'Insert Success'
+        // );
+        // $post = \App\Post::find(1);
+
+        return $request;
     }
 
     /**

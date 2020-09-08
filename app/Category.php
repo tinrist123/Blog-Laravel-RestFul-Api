@@ -9,6 +9,7 @@ class Category extends Model
     //
     protected $table = "category";
 
+    protected $fillable = ['id', 'CateName', 'Alias'];
 
     public function post()
     {

@@ -174,8 +174,7 @@ class PostController extends Controller
         foreach ($posts as $value) {
             $value['CateName'] = $value->category->CateName;
         }
-        // $posts['count'] = $countPost;
-        return json_encode($posts);
+        return $posts;
     }
     public function index()
     {
@@ -360,7 +359,6 @@ class PostController extends Controller
      */
     public function showCate($id)
     {
-        //
         $post = \App\Post::findOrFail($id);
 
         return $post->category;

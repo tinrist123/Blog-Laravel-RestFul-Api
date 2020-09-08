@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
+use Illuminate\Support\Facades\Response;
 
 class TagController extends Controller
 {
@@ -48,11 +49,12 @@ class TagController extends Controller
      */
     public function getPostsPerPage($id, $page)
     {
-        $tag = \App\Tag::findOrFail($id)->post->paginate(10, [
-            '*', 'page', 10
-        ]);
-
-        return $tag;
+        $tag = \App\Tag::findOrFail($id)->post->skip(((int)$page - 1) * 5)->take(5)->toArray();
+        $data = [];
+        foreach ($tag as $value) {
+            array_push($data, $value);
+        }
+        return $data;
     }
     /**
      * @OA\Get(
