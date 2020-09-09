@@ -6,7 +6,13 @@
     <IfModule dir_module>
         DirectoryIndex index.html index.php
     </IfModule>
-    
+
+    <IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteCond %{REQUEST_URI} !^public
+    RewriteRule ^(.*)$ public/$1 [L]
+    </IfModule>
+
     RewriteEngine On
 
     # Handle Authorization Header
