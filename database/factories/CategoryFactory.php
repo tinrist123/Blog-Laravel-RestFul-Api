@@ -9,6 +9,5 @@ $factory->define(\App\Category::class, function (Faker $faker) {
         //
         'CateName' => $faker->domainWord,
         'Alias' => $faker->slug,
-        'Picture' =>  $faker->imageUrl($width = 640, $height = 480)
     ];
 });

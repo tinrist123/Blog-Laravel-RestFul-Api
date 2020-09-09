@@ -22,7 +22,6 @@ $factory->define(User::class, function (Faker $faker) {
     return [
         'Name' => $faker->name,
         'Email' => $faker->unique()->safeEmail,
-        'Avatar' => $faker->imageUrl($width = 100, $height = 100),
         'created_at' => Carbon::now(),
         'updated_at' => Carbon::now(),
     ];
