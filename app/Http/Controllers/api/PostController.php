@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 use Validator;
 
@@ -201,19 +202,72 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        // $validation = Validator::make($request->all(), [
-        //     'tags' => 'required|array',
-        //     'tags.*' => 'required|string|distinct|unique:tags,TagName'
-        // ]);
 
-        // if ($validation->fails()) {
-        //     return response()->json(
-        //         ['error' => $validation->errors()],
-        //         401
-        //     );
-        // }
-        return $request;
+        $validation = Validator::make($request->all(), [
+            'category' => "required|unique:category,CateName",
+            'tags' => 'required',
+            'tags.oldTag' => "array",
+            'tags.newTag' => 'required|array',
+            'tags.newTag.*' => 'required|distinct|unique:tags,TagName',
+            'title' => 'required|string',
+            'content' => 'required|string',
+            'imgUrl' => 'required|url'
+        ]);
+
+        if ($validation->fails()) {
+            return response()->json(
+                ['error' => $validation->errors()],
+                401
+            );
+        }
+
+        $category = $request->category;
+
+        $tags = $request->tags;
+        $newTag = $tags['newTag'];
+        $oldTag = $tags['oldTag'];
+
+        $title = $request->title;
+        $short_description = $request->short_description;
+        $content = $request->content;
+        $imgUrl = $request->imgUrl;
+
+        $newCateId = \App\Category::create([
+            'CateName' => $category,
+            'Alias' => convert_vi_to_en($category),
+        ]);
+
+        $newPostId = \App\Post::create([
+            'Title' => $title,
+            'Alias' => convert_vi_to_en($title),
+            'Short_Description' => $short_description,
+            'Content' => $content,
+            'Image' => $imgUrl,
+            'user_id' => 1,
+            'cate_id' => $newCateId->id,
+        ]);
+
+        foreach ($newTag as $value) {
+            $tagId = \App\Tag::create([
+                'TagName' => $value,
+            ]);
+            $post_have_tag = \App\PostAndTag::create([
+                'post_id' => $newPostId->id,
+                'tag_id' => $tagId->id,
+            ]);
+        }
+
+        foreach ($oldTag as $value) {
+            $post_have_tag = \App\PostAndTag::create([
+                'post_id' => $newPostId->id,
+                'tag_id' => $value,
+            ]);
+        }
+
+        return [
+            'status' => 'success',
+            'code' => 200,
+        ];
     }
 
     /**

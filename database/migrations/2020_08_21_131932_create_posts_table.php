@@ -21,7 +21,6 @@ class CreatePostsTable extends Migration
             $table->longtext('Content');
             $table->string('Image', 150);
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('tag_id')->constrained('tags')->onDelete('cascade');
             $table->foreignId('cate_id')->constrained('category')->onDelete('cascade');
             $table->timestamps();
         });

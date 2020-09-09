@@ -9,6 +9,8 @@ class Post extends Model
     //
     protected $table = "posts";
 
+    protected $fillable = ['Title', 'Alias', 'Short_Description', 'Content', 'Image', 'cate_id', 'user_id', 'created_at', 'updated_at'];
+
     public function tag()
     {
         return $this->belongsToMany('App\Tag', 'posts_have_tags', 'post_id', 'tag_id');
