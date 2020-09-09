@@ -9,6 +9,8 @@ class PostsTableSeed extends Seeder
      *
      * @return void
      */
+
+
     public function run()
     {
         //
