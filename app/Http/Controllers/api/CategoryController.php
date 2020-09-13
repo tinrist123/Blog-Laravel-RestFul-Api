@@ -11,7 +11,32 @@ class CategoryController extends Controller
 {
     /**
      * @OA\Get(
-     *      path="/api/v1/category/post/{id}",
+     *      path="api/v1/category/new",
+     *      operationId="getNewCate",
+     *      tags={"Category"},
+     *      summary="Get list of projects",
+     *      description="Returns  the newest Category",
+     *      @OA\Response(
+     *          response=200,
+     *          description="successful operation"
+     *       ),
+     *       @OA\Response(response=400, description="Bad request"),
+     *       security={
+     *           {"api_key_security_example": {}}
+     *       }
+     *     )
+     *
+     * Returns list of projects
+     */
+    public function newCate()
+    {
+        $cates = \App\Category::orderBy('created_at', 'DESC')->get()->take(3);
+
+        return $cates;
+    }
+    /**
+     * @OA\Get(
+     *      path="api/v1/category/post/{id}",
      *      operationId="getPostOnCateById",
      *      tags={"Category"},
      *      summary="Get Post On Category By Id",
@@ -46,7 +71,7 @@ class CategoryController extends Controller
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/category/post/total/{id}",
+     *      path="api/v1/category/post/total/{id}",
      *      operationId="getTotalPostById",
      *      tags={"Category"},
      *      summary="Get Total Post By Category",
@@ -81,7 +106,7 @@ class CategoryController extends Controller
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/category/post/{id}/page={page}",
+     *      path="api/v1/category/post/{id}/page={page}",
      *      operationId="getProjectByIdAndPage",
      *      tags={"Category"},
      *      summary="Get Post On Category By Id Per Page",
@@ -128,7 +153,7 @@ class CategoryController extends Controller
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/category/all",
+     *      path="api/v1/category/all",
      *      operationId="getAllCate",
      *      tags={"Category"},
      *      summary="Get list of projects",
@@ -152,7 +177,7 @@ class CategoryController extends Controller
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/category",
+     *      path="api/v1/category",
      *      operationId="getProjectsList",
      *      tags={"Category"},
      *      summary="Get list of Category",

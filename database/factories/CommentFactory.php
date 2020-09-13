@@ -9,9 +9,9 @@ $factory->define(\App\Comment::class, function (Faker $faker) {
     return [
         //
         'Comment' => $faker->text($maxNbChars = 200),
-        'user_id' => rand(1, 17),
-        'post_id' => rand(1, 14),
-
+        'user_id' => rand(1, 20),
+        'post_id' => rand(1, 40),
+        'reply_id' => 0,
         'created_at' => Carbon::now(),
         'updated_at' => Carbon::now(),
     ];

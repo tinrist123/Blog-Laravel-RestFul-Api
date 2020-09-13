@@ -12,7 +12,7 @@ class PostController extends Controller
 {
     /**
      * @OA\Get(
-     *      path="/api/v1/post/tags/{id}",
+     *      path="api/v1/post/tags/{id}",
      *      operationId="getProjectById33",
      *      tags={"Post"},
      *      summary="Get tags have foreign key with post ",
@@ -47,7 +47,7 @@ class PostController extends Controller
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/post/total",
+     *      path="api/v1/post/total",
      *      operationId="getTotalPost",
      *      tags={"Post"},
      *      summary="Get total of post",
@@ -71,7 +71,7 @@ class PostController extends Controller
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/post/category/image/{idCate}",
+     *      path="api/v1/post/category/image/{idCate}",
      *      operationId="getPost-Related-Category",
      *      tags={"Post"},
      *      summary="Get post have id category which is foreign key with Post ",
@@ -106,7 +106,7 @@ class PostController extends Controller
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/post/related/{id}",
+     *      path="api/v1/post/related/{id}",
      *      operationId="getPost-Related-Post-By-Post-Id",
      *      tags={"Post"},
      *      summary="Get related post have id category which is foreign key with Post ",
@@ -141,7 +141,7 @@ class PostController extends Controller
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/post/new/page/{page}",
+     *      path="api/v1/post/new/page/{page}",
      *      operationId="getnewPost-show-per-page",
      *      tags={"Post"},
      *      summary="Get new post per page",
@@ -272,7 +272,7 @@ class PostController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/v1/post/{id}",
+     *      path="api/v1/post/{id}",
      *      operationId="getPostById",
      *      tags={"Post"},
      *      summary="Get Post By Id",
@@ -308,7 +308,7 @@ class PostController extends Controller
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/post/user/{id}",
+     *      path="api/v1/post/user/{id}",
      *      operationId="getUserByIdPost",
      *      tags={"Post"},
      *      summary="Get user by id Post ",
@@ -344,7 +344,7 @@ class PostController extends Controller
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/post/comment/{id}",
+     *      path="api/v1/post/comment/{id}",
      *      operationId="getCommentgoryByIdPost",
      *      tags={"Post"},
      *      summary="Get comment by id Post ",
@@ -374,17 +374,21 @@ class PostController extends Controller
     public function showComment($id)
     {
         //
-        $post = \App\Post::findOrFail($id);
+        $post = \App\Post::find($id);
 
-        $post['avatar'] = $post->user->Avatar;
-        foreach ($post->comment as $value) {
-            $value['Avatar'] = $value->user->Avatar;
+        if ($post === null) return [];
+
+        $post['name'] = $post->user->Name;
+
+        foreach ($post->comment->where('reply_id', 0) as $value) {
+            $value['name'] = $value->user->Name;
         }
+
         return $post->comment;
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/post/category/{id}",
+     *      path="api/v1/post/category/{id}",
      *      operationId="getCategoryByIdPost",
      *      tags={"Post"},
      *      summary="Get category by id Post ",
@@ -419,7 +423,7 @@ class PostController extends Controller
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/post/tag/{id}",
+     *      path="api/v1/post/tag/{id}",
      *      operationId="getTagByIdPost",
      *      tags={"Post"},
      *      summary="Get tag by id Post ",

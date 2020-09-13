@@ -9,7 +9,7 @@ use Illuminate\Support\Carbon;
 $factory->define(\App\Post::class, function (Faker $faker) {
     return [
         //
-        'user_id' => factory(App\User::class)->create(),
+        'blogger_id' => rand(1, 10),
         'cate_id' => factory(App\Category::class)->create(),
         'Title' => $faker->catchPhrase,
         'Alias' => $faker->domainWord,

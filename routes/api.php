@@ -23,7 +23,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1'], function () {
     Route::resource('user', 'api\UserController')->only('index');
 
-    Route::apiResource('comments', 'api\CommentController');
+
+    Route::group(['prefix' => 'comments'], function () {
+        Route::post('', 'api\CommentController@store');
+
+        Route::get('post/reply/{idPost}/{idUser}', 'api\CommentController@getReply');
+    });
+
 
     Route::group(['prefix' => 'tags'], function () {
         Route::get('', 'api\TagController@index');
@@ -57,6 +63,9 @@ Route::group(['prefix' => 'v1'], function () {
 
 
     Route::group(['prefix' => 'category'], function () {
+
+        Route::get('new', 'api\CategoryController@newCate');
+
         Route::get('all', 'api\CategoryController@allCate');
         Route::get('', 'api\CategoryController@index');
         Route::post('', 'api\CategoryController@store');

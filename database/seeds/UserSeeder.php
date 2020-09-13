@@ -15,11 +15,6 @@ class UserSeeder extends Seeder
     public function run()
     {
         //
-        DB::table('users')->insert([
-            'Name' => Str::random(10),
-            'Email' => Str::random(10) . '@gmail.com',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
+        factory(\App\User::class, 20)->create();
     }
 }

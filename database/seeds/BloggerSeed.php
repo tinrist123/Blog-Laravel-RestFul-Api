@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class CommentsTableSeed extends Seeder
+class BloggerSeed extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,6 +12,6 @@ class CommentsTableSeed extends Seeder
     public function run()
     {
         //
-        factory(App\Comment::class, 20)->create();
+        factory(\App\Blogger::class, 10)->create();
     }
 }

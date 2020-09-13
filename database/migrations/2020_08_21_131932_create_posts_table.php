@@ -20,8 +20,8 @@ class CreatePostsTable extends Migration
             $table->text('Short_Description');
             $table->longtext('Content');
             $table->string('Image', 150);
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('cate_id')->constrained('category')->onDelete('cascade');
+            $table->foreignId('blogger_id')->constrained('blogger')->onDelete('cascade');
             $table->timestamps();
         });
     }

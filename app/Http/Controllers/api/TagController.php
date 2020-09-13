@@ -11,7 +11,7 @@ class TagController extends Controller
 {
     /**
      * @OA\Get(
-     *      path="/api/v1/tags/post/{id}/page={page}",
+     *      path="api/v1/tags/post/{id}/page={page}",
      *      operationId="getPostByIdTagAndPage11",
      *      tags={"Tag"},
      *      summary="Get post by id tag and show on per page",
@@ -58,7 +58,7 @@ class TagController extends Controller
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/tags/post/total/{id}",
+     *      path="api/v1/tags/post/total/{id}",
      *      operationId="getTotalPostByIdTag11",
      *      tags={"Tag"},
      *      summary="Get total post by id tag ",
@@ -93,7 +93,7 @@ class TagController extends Controller
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/tags/post/{id}",
+     *      path="api/v1/tags/post/{id}",
      *      operationId="getPostByIdTag1",
      *      tags={"Tag"},
      *      summary="Get  post by id tag ",
@@ -128,7 +128,7 @@ class TagController extends Controller
     }
     /**
      * @OA\Get(
-     *      path="/api/v1/tag",
+     *      path="api/v1/tag",
      *      operationId="getAllTag",
      *      tags={"Tag"},
      *      summary="Get list of tag",

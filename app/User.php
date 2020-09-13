@@ -10,14 +10,10 @@ class User extends Model
     //
     protected $table = 'users';
 
+    protected $fillable = ['Name', 'Email'];
 
     public function comment()
     {
         return $this->hasMany('App\Comment', 'user_id', 'id');
-    }
-
-    public function post()
-    {
-        return $this->hasMany('App\Post', 'user_id', 'id');
     }
 }
