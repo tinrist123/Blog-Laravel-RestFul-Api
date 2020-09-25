@@ -581,8 +581,37 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $idBlog)
     {
         //
+        $validation = Validator::make($request->all(), [
+            'idBlogger' => 'required|integer|exists:blogger,id'
+        ]);
+
+
+        if ($validation->fails()) {
+            return response()->json(
+                ['error' => $validation->errors()],
+                401
+            );
+        }
+
+        $idBlogger = $request->idBlogger;
+
+        $deletedPost = \App\Post::find($idBlog);
+        if ($deletedPost) {
+            $postOwnBlogger = $deletedPost->where('blogger_id', $idBlogger)->first();
+            if (!$postOwnBlogger) {
+                return response()->json(['message' => 'You must own this blogger to delete'], 202);
+            } else {
+                if ($deletedPost->delete()) {
+                    return response()->json(['success' => 'Delete successfully', 'status' => '200'], 200);
+                } else {
+                    return response()->json(['error' => 'Server Error', 'status' => '401'], 401);
+                }
+            }
+        } else {
+            return response()->json(['message' => 'Please Refresh this page'], 401);
+        }
     }
 }

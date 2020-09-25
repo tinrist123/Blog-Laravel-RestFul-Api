@@ -24,7 +24,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('post/reply/{idPost}/{idUser}', 'api\CommentController@getReply');
 
 
-        Route::delete('{idCmt}', 'api\CommentController@destroy')->middleware('auth:api');;
+        Route::delete('{idCmt}', 'api\CommentController@destroy')->middleware('auth:api');
     });
 
 
@@ -55,7 +55,10 @@ Route::group(['prefix' => 'v1'], function () {
 
 
         Route::post('', 'api\PostController@store')->middleware('auth:api');
-        Route::put('{idBlog}', 'api\PostController@update')->middleware('auth:api');;
+
+        Route::put('{idBlog}', 'api\PostController@update')->middleware('auth:api');
+
+        Route::delete('{idBlog}', 'api\PostController@destroy')->middleware('auth:api');
     });
 
 
