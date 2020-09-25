@@ -13,7 +13,30 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/v1/category/post/{id}": {
+        "api/v1/category/new": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get list of projects",
+                "description": "Returns  the newest Category",
+                "operationId": "getNewCate",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "api/v1/category/post/{id}": {
             "get": {
                 "tags": [
                     "Category"
@@ -53,7 +76,7 @@
                 ]
             }
         },
-        "/api/v1/category/post/total/{id}": {
+        "api/v1/category/post/total/{id}": {
             "get": {
                 "tags": [
                     "Category"
@@ -93,7 +116,7 @@
                 ]
             }
         },
-        "/api/v1/category/post/{id}/page={page}": {
+        "api/v1/category/post/{id}/page={page}": {
             "get": {
                 "tags": [
                     "Category"
@@ -142,7 +165,7 @@
                 ]
             }
         },
-        "/api/v1/category/all": {
+        "api/v1/category/all": {
             "get": {
                 "tags": [
                     "Category"
@@ -165,7 +188,7 @@
                 ]
             }
         },
-        "/api/v1/category": {
+        "api/v1/category": {
             "get": {
                 "tags": [
                     "Category"
@@ -188,7 +211,7 @@
                 ]
             }
         },
-        "/api/v1/post/tags/{id}": {
+        "api/v1/post/tags/{id}": {
             "get": {
                 "tags": [
                     "Post"
@@ -228,7 +251,7 @@
                 ]
             }
         },
-        "/api/v1/post/total": {
+        "api/v1/post/total": {
             "get": {
                 "tags": [
                     "Post"
@@ -251,7 +274,7 @@
                 ]
             }
         },
-        "/api/v1/post/category/image/{idCate}": {
+        "api/v1/post/category/image/{idCate}": {
             "get": {
                 "tags": [
                     "Post"
@@ -291,7 +314,7 @@
                 ]
             }
         },
-        "/api/v1/post/related/{id}": {
+        "api/v1/post/related/{id}": {
             "get": {
                 "tags": [
                     "Post"
@@ -331,7 +354,7 @@
                 ]
             }
         },
-        "/api/v1/post/new/page/{page}": {
+        "api/v1/post/new/page/{page}": {
             "get": {
                 "tags": [
                     "Post"
@@ -371,7 +394,7 @@
                 ]
             }
         },
-        "/api/v1/post/{id}": {
+        "api/v1/post/{id}": {
             "get": {
                 "tags": [
                     "Post"
@@ -411,7 +434,7 @@
                 ]
             }
         },
-        "/api/v1/post/user/{id}": {
+        "api/v1/post/user/{id}": {
             "get": {
                 "tags": [
                     "Post"
@@ -451,7 +474,7 @@
                 ]
             }
         },
-        "/api/v1/post/comment/{id}": {
+        "api/v1/post/comment/{id}": {
             "get": {
                 "tags": [
                     "Post"
@@ -491,7 +514,7 @@
                 ]
             }
         },
-        "/api/v1/post/category/{id}": {
+        "api/v1/post/category/{id}": {
             "get": {
                 "tags": [
                     "Post"
@@ -531,7 +554,7 @@
                 ]
             }
         },
-        "/api/v1/post/tag/{id}": {
+        "api/v1/post/tag/{id}": {
             "get": {
                 "tags": [
                     "Post"
@@ -571,7 +594,7 @@
                 ]
             }
         },
-        "/api/v1/tags/post/{id}/page={page}": {
+        "api/v1/tags/post/{id}/page={page}": {
             "get": {
                 "tags": [
                     "Tag"
@@ -620,7 +643,7 @@
                 ]
             }
         },
-        "/api/v1/tags/post/total/{id}": {
+        "api/v1/tags/post/total/{id}": {
             "get": {
                 "tags": [
                     "Tag"
@@ -660,7 +683,7 @@
                 ]
             }
         },
-        "/api/v1/tags/post/{id}": {
+        "api/v1/tags/post/{id}": {
             "get": {
                 "tags": [
                     "Tag"
@@ -700,7 +723,7 @@
                 ]
             }
         },
-        "/api/v1/tag": {
+        "api/v1/tag": {
             "get": {
                 "tags": [
                     "Tag"

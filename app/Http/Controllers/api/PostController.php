@@ -170,7 +170,7 @@ class PostController extends Controller
      */
     public function getNewPosts($page)
     {
-        $posts = \App\Post::offset((((int)$page - 1) * 5))->take(5)->get();
+        $posts = \App\Post::offset((((int)$page - 1) * 5))->orderBy('created_at', 'DESC')->take(5)->get();
 
         foreach ($posts as $value) {
             $value['CateName'] = $value->category->CateName;
@@ -204,14 +204,15 @@ class PostController extends Controller
     {
 
         $validation = Validator::make($request->all(), [
-            'category' => "required|unique:category,CateName",
+            'category' => "required",
             'tags' => 'required',
             'tags.oldTag' => "array",
-            'tags.newTag' => 'required|array',
-            'tags.newTag.*' => 'required|distinct|unique:tags,TagName',
+            'tags.newTag' => 'array',
+            'tags.newTag.*' => 'distinct|unique:tags,TagName',
             'title' => 'required|string',
             'content' => 'required|string',
-            'imgUrl' => 'required|url'
+            'imgUrl' => 'required|url',
+            'idBlogger' => "required|integer|exists:blogger,id"
         ]);
 
         if ($validation->fails()) {
@@ -228,14 +229,22 @@ class PostController extends Controller
         $oldTag = $tags['oldTag'];
 
         $title = $request->title;
-        $short_description = $request->short_description;
+        $short_description = $request->Short_Description;
         $content = $request->content;
         $imgUrl = $request->imgUrl;
+        $idBlogger = $request->idBlogger;
 
-        $newCateId = \App\Category::create([
-            'CateName' => $category,
-            'Alias' => convert_vi_to_en($category),
-        ]);
+        if (is_int($request->category)) {
+            $idUpdateCate = $request->category;
+        } else {
+            $idUpdateCate = \App\Category::firstOrCreate(
+                [
+                    'CateName' => $category,
+                ],
+                ['Alias' => convert_vi_to_en($category)],
+            )->id;
+        }
+
 
         $newPostId = \App\Post::create([
             'Title' => $title,
@@ -243,8 +252,9 @@ class PostController extends Controller
             'Short_Description' => $short_description,
             'Content' => $content,
             'Image' => $imgUrl,
-            'user_id' => 1,
-            'cate_id' => $newCateId->id,
+            'blogger_id' => $idBlogger,
+            'cate_id' => $idUpdateCate,
+            'created_at' => Carbon::now()->toDateTimeString(),
         ]);
 
         foreach ($newTag as $value) {
@@ -304,6 +314,8 @@ class PostController extends Controller
         //
         $post = \App\Post::findOrFail($id);
 
+        $post['blogger'] = $post->blogger;
+
         return $post;
     }
     /**
@@ -335,12 +347,12 @@ class PostController extends Controller
      *     },
      * )
      */
-    public function showUser($id)
+    public function showBlogger($id)
     {
         //
         $post = \App\Post::findOrFail($id);
 
-        return $post->user;
+        return $post->blogger;
     }
     /**
      * @OA\Get(
@@ -377,14 +389,11 @@ class PostController extends Controller
         $post = \App\Post::find($id);
 
         if ($post === null) return [];
-
-        $post['name'] = $post->user->Name;
-
         foreach ($post->comment->where('reply_id', 0) as $value) {
             $value['name'] = $value->user->Name;
         }
 
-        return $post->comment;
+        return $post->comment->where('reply_id', 0);
     }
     /**
      * @OA\Get(
@@ -475,9 +484,95 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $idBlog)
     {
         //
+        $validation = Validator::make($request->all(), [
+            'category' => "required",
+            'tags' => 'required',
+            'tags.oldTag' => "array",
+            'tags.newTag' => 'array',
+            'tags.newTag.*' => 'required|distinct',
+            'title' => 'required|string',
+            'content' => 'required|string',
+            'imgUrl' => 'required|url',
+            'idBlogger' => 'required|integer|exists:blogger,id',
+        ]);
+
+        $category = $request->category;
+
+        $tags = $request->tags;
+        $newTag = $tags['newTag'];
+        $oldTag = $tags['oldTag'];
+
+        $idBlogger = $request->idBlogger;
+        $title = $request->title;
+        $short_description = $request->Short_Description;
+        $content = $request->content;
+        $imgUrl = $request->imgUrl;
+        if ($validation->fails()) {
+            return response()->json(
+                ['error' => $validation->errors()],
+                401
+            );
+        }
+
+        if (is_int($request->category)) {
+            $idUpdateCate = $request->category;
+        } else {
+            $idUpdateCate = \App\Category::firstOrCreate(
+                [
+                    'CateName' => $category,
+                ],
+                ['Alias' => convert_vi_to_en($category)],
+            )->id;
+        }
+
+        if (!$idUpdateCate) {
+            return 'error';
+        }
+
+        $UpdatedPost = \App\Post::find($idBlog)->update([
+            'Title' => $title,
+            'Alias' => convert_vi_to_en($title),
+            'Short_Description' => $short_description,
+            'Content' => $content,
+            'Image' => $imgUrl,
+            'blogger_id' => $idBlogger,
+            'cate_id' => $idUpdateCate,
+        ]);
+        if (!$UpdatedPost) {
+            return 'error';
+        }
+        foreach ($newTag as $value) {
+            $tagId = \App\Tag::updateOrCreate([
+                'TagName' => $value,
+            ]);
+            if ($tagId) {
+                $post_have_tag = \App\PostAndTag::create([
+                    'post_id' => $idBlog,
+                    'tag_id' => $tagId->id,
+                ]);
+            } else {
+                return 'error';
+            }
+        }
+
+        foreach ($oldTag as $value) {
+            $post_have_tag = \App\PostAndTag::updateOrCreate([
+                'post_id' => $idBlog,
+                'tag_id' => $value,
+            ]);
+
+            if (!$post_have_tag) {
+                return 'error';
+            }
+        }
+
+        return [
+            'status' => 'success',
+            'code' => 200,
+        ];
     }
 
     /**

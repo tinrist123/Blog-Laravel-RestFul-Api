@@ -4,6 +4,10 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Exception;
+use Request;
+use Illuminate\Auth\AuthenticationException;
+use Response;
 
 class Handler extends ExceptionHandler
 {
@@ -51,5 +55,12 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         return parent::render($request, $exception);
+    }
+
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->expectsJson())
+            return  response()->json(['message' => $exception->getMessage()], 401);
     }
 }

@@ -145,10 +145,12 @@ class CategoryController extends Controller
     public function getPostsonPage($id, $page)
     {
         $post = \App\Category::findOrFail($id)->post->skip(($page - 1) * 5)->take(5)->toArray();
+
         $data = [];
         foreach ($post as $value) {
             array_push($data, $value);
         }
+
         return $data;
     }
     /**
@@ -219,33 +221,33 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        // $validation = Validator::make($request->all(), [
-        //     'CateName' => 'required|string|unique:category,CateName',
-        // ]);
 
-        // if ($validation->fails()) {
-        //     return response()->json(
-        //         ['error' => $validation->errors()],
-        //         401
-        //     );
-        // }
-        // $newCate = new \App\Category;
+        $validation = Validator::make($request->all(), [
+            'CateName' => 'required|string|unique:category,CateName',
+        ]);
 
-        // $newCate->CateName = $request->CateName;
-        // $newCate->Alias = convert_vi_to_en($newCate->CateName);
+        if ($validation->fails()) {
+            return response()->json(
+                ['error' => $validation->errors()],
+                401
+            );
+        }
+        $newCate = new \App\Category;
 
-        // if (!$newCate->save())
-        //     return array(
-        //         'code'      =>  400,
-        //         'message'   =>  'Error!'
-        //     );
+        $newCate->CateName = $request->CateName;
+        $newCate->Alias = convert_vi_to_en($newCate->CateName);
 
-        // return array(
-        //     'code' => 200,
-        //     'message' => 'Insert Success'
-        // );
-        // $post = \App\Post::find(1);
+        if (!$newCate->save())
+            return array(
+                'code'      =>  400,
+                'message'   =>  'Error!'
+            );
+
+        return array(
+            'code' => 200,
+            'message' => 'Insert Success'
+        );
+        $post = \App\Post::find(1);
 
         return $request;
     }

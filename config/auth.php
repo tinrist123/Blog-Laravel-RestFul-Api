@@ -15,9 +15,10 @@ return [
 
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'users',
+        'passwords' => 'blogger',
     ],
 
+    'table' => 'blogger',
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -38,13 +39,12 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'blogger',
         ],
 
         'api' => [
-            'driver' => 'token',
-            'provider' => 'users',
-            'hash' => false,
+            'driver' => 'passport',
+            'provider' => 'blogger',
         ],
     ],
 
@@ -66,14 +66,14 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'blogger' => [
             'driver' => 'eloquent',
-            'model' => App\User::class,
+            'model' => App\Blogger::class,
         ],
 
         // 'users' => [
         //     'driver' => 'database',
-        //     'table' => 'users',
+        //     '    ' => 'users',
         // ],
     ],
 
@@ -93,11 +93,11 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'blogger' => [
+            'provider' => 'blogger',
             'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
+            'expire' => 80,
+            'throttle' => 80,
         ],
     ],
 

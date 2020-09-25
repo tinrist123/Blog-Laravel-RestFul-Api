@@ -14,12 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-
 Route::group(['prefix' => 'v1'], function () {
     Route::resource('user', 'api\UserController')->only('index');
 
@@ -28,6 +22,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('', 'api\CommentController@store');
 
         Route::get('post/reply/{idPost}/{idUser}', 'api\CommentController@getReply');
+
+
+        Route::delete('{idCmt}', 'api\CommentController@destroy')->middleware('auth:api');;
     });
 
 
@@ -43,22 +40,22 @@ Route::group(['prefix' => 'v1'], function () {
 
 
     Route::group(['prefix' => 'post'], function () {
-        Route::post('', 'api\PostController@store');
 
-        Route::get('new/page/{page}', 'api\PostController@getNewPosts');
+
         Route::get('total', 'api\PostController@countAllPosts');
-
+        Route::get('new/page/{page}', 'api\PostController@getNewPosts');
         Route::get('{id}', 'api\PostController@show');
-        Route::get('user/{id}', 'api\PostController@showUser');
+        Route::get('blogger/{id}', 'api\PostController@showBlogger');
         Route::get('comment/{id}', 'api\PostController@showComment');
         Route::get('category/{id}', 'api\PostController@showCate');
         Route::get('tag/{id}', 'api\PostController@showTag');
-
         Route::get('related/{id}', 'api\PostController@relatedPosts');
-
         Route::get('category/image/{id}', 'api\PostController@catePosts');
-
         Route::get('tags/{id}', 'api\PostController@tagsPost');
+
+
+        Route::post('', 'api\PostController@store')->middleware('auth:api');
+        Route::put('{idBlog}', 'api\PostController@update')->middleware('auth:api');;
     });
 
 
@@ -68,13 +65,25 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::get('all', 'api\CategoryController@allCate');
         Route::get('', 'api\CategoryController@index');
-        Route::post('', 'api\CategoryController@store');
+        Route::post('', 'api\CategoryController@store')->middleware('auth:api');;
 
         Route::get('post/{id}', 'api\CategoryController@getPostsonCate');
         Route::get('post/{id}/page={page}', 'api\CategoryController@getPostsonPage');
 
         Route::get('post/total/{id}', 'api\CategoryController@getTotalPostsonCate');
+    });
 
-        Route::get('test', 'api\CategoryController@test');
+    Route::group(['prefix' => 'blogger'], function () {
+
+        Route::get('', 'api\BloggerController@index');
+        Route::get('{id}', 'api\BloggerController@show');
+        Route::get('post/{idBlogger}/page={page}', 'api\BloggerController@getOwnPost');
+        Route::get('post/total/{idBlogger}', 'api\BloggerController@getTotalOwnPost');
+
+        Route::post('login', 'api\BloggerController@login');
+        Route::post('', 'api\BloggerController@store')->middleware('auth:api');;
+
+
+        Route::put('{idBlogger}', 'api\BloggerController@update')->middleware('auth:api');;
     });
 });

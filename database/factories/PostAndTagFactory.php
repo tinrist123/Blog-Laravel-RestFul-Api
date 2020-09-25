@@ -10,8 +10,8 @@ use Illuminate\Support\Carbon;
 $factory->define(App\PostAndTag::class, function (Faker $faker) {
     return [
         //
-        'post_id' => rand(1, 8),
-        'tag_id' => rand(1, 14),
+        'post_id' => rand(1, 40),
+        'tag_id' => rand(1, 20),
         'created_at' => Carbon::now(),
         'updated_at' => Carbon::now(),
     ];

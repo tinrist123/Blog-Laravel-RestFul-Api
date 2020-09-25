@@ -41,7 +41,7 @@ class CommentController extends Controller
         $validation = Validator::make($request->all(), [
             'idPost' => 'required|integer',
             'name' => 'required|string',
-            'email' => 'required|string|email|unique:users,Email',
+            'email' => 'required|string|email',
             'comment' => 'required|string',
             'idUser' => 'required|integer'
         ]);
@@ -59,10 +59,10 @@ class CommentController extends Controller
         $idPost = $request->idPost;
         $idUser = $request->idUser;
 
-        $newIdUser = \App\User::create([
-            'Name' => $name,
-            'Email' => $email,
-        ]);
+        $newIdUser = \App\User::updateOrCreate(
+            ['Email' => $email],
+            ['Name' => $name],
+        );
 
         $newComment = \App\Comment::create([
             'Comment' => $comment,
@@ -71,10 +71,14 @@ class CommentController extends Controller
             'post_id' => $idPost,
         ]);
 
-        return array(
-            'status' => 'success',
-            'code' => '200'
-        );
+        if ($newComment) {
+            return array(
+                'status' => 'success',
+                'code' => '200'
+            );
+        } else {
+            return response()->json(['error' => 'Server Error'], 401);
+        }
     }
 
 
@@ -130,8 +134,38 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         //
+        $validation = Validator::make($request->all(), [
+            'idBlogger' => 'required|integer|exists:blogger,id'
+        ]);
+
+
+        if ($validation->fails()) {
+            return response()->json(
+                ['error' => $validation->errors()],
+                401
+            );
+        }
+
+        $idBlogger = $request->idBlogger;
+
+        $deletedCmt = \App\Comment::find($id);
+
+        if ($deletedCmt) {
+            $postOwnBlogger = $deletedCmt->post()->where('blogger_id', $idBlogger)->first();
+            if (!$postOwnBlogger) {
+                return response()->json(['message' => 'You must own this blogger to delete'], 202);
+            } else {
+                if ($deletedCmt->delete()) {
+                    return response()->json(['success' => 'Delete successfully', 'status' => '200'], 200);
+                } else {
+                    return response()->json(['error' => 'Server Error', 'status' => '401'], 401);
+                }
+            }
+        } else {
+            return response()->json(['message' => 'Please Refresh this page'], 401);
+        }
     }
 }
